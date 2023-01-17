@@ -13,7 +13,15 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   List<SelectBinding> get commonPaths => _commonPaths;
 
   late SelectBinding? _selectedDomainFolder = SelectBinding(
-      name: "name", path: "", modifiedDate: "", size: "", icon: Icons.folder);
+    name: "name",
+    path: "",
+    modifiedDate: "",
+    size: "",
+    icon: Icons.folder,
+    isFolder: true,
+    isSelected: false,
+  );
+
   SelectBinding? get selectedDomainFolder => _selectedDomainFolder;
 
   late List<SelectBinding> _folderContent = [];
@@ -33,20 +41,29 @@ class DesktopFilePickerViewModel extends BaseViewModel {
             modifiedDate: "",
             size: "",
             icon: Icons.folder,
+            isFolder: true,
+            isSelected: false,
           ),
         )
         .toList();
-
     var userDefault = _fileManager.getOsDefault();
-    _selectedDomainFolder = SelectBinding(
-        name: userDefault,
-        path: userDefault,
-        modifiedDate: "",
-        size: "",
-        icon: Icons.abc);
+    await openFolder(userDefault);
+    notifyListeners();
+  }
 
-    var content = await _fileManager.getDirectories(userDefault);
-    var files = await _fileManager.getFiles([], userDefault);
+  Future openFolder(String path) async {
+    _folderContent.clear();
+    _selectedDomainFolder = SelectBinding(
+      name: path,
+      path: path,
+      modifiedDate: "",
+      size: "",
+      icon: Icons.abc,
+      isFolder: true,
+      isSelected: false,
+    );
+    var content = await _fileManager.getDirectories(path);
+    var files = await _fileManager.getFiles([], path);
     List<SelectBinding> mappedContent = [];
     List<SelectBinding> mappedFiles = [];
 
@@ -58,6 +75,8 @@ class DesktopFilePickerViewModel extends BaseViewModel {
           path: e.path,
           modifiedDate: await _fileManager.getDirectorylastModified(e.path),
           size: await _fileManager.getDirectorySize(e.path),
+          isFolder: true,
+          isSelected: false,
         ),
       );
     }
@@ -70,12 +89,36 @@ class DesktopFilePickerViewModel extends BaseViewModel {
           path: e.path,
           modifiedDate: await Utilities.convertDateAsync(e),
           size: await Utilities.convertSizeAsync(e),
+          isFolder: false,
+          isSelected: false,
         ),
       );
     }
 
     _folderContent.addAll(mappedContent);
     _folderContent.addAll(mappedFiles);
+  }
+
+  returnFolder() async {
+    var prevDirectory =
+        await _fileManager.getParentDirectory(_selectedDomainFolder!.path);
+
+    await openFolder(prevDirectory!.path);
+    notifyListeners();
+  }
+
+  folderSelected(SelectBinding e) async {
+    if (!e.isFolder) return;
+
+    await openFolder(e.path);
+    notifyListeners();
+  }
+
+  gridElementSelected(SelectBinding e) async {
+    _folderContent.where((element) => element.isSelected).forEach((element) {
+      element.isSelected = false;
+    });
+    _folderContent.firstWhere((element) => element == e).isSelected = true;
     notifyListeners();
   }
 }

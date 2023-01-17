@@ -8,6 +8,8 @@ class SelectBinding extends Equatable {
   late String modifiedDate;
   late String size;
   late IconData icon;
+  late bool isFolder;
+  late bool isSelected;
 
   SelectBinding({
     required this.name,
@@ -15,6 +17,8 @@ class SelectBinding extends Equatable {
     required this.modifiedDate,
     required this.size,
     required this.icon,
+    required this.isFolder,
+    required this.isSelected,
   });
 
   @override

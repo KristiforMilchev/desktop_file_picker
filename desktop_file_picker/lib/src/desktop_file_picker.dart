@@ -64,7 +64,7 @@ class FileSelector extends StatelessWidget {
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith(
                                 (states) => ThemeColors.cardBackground)),
-                        onPressed: (() => {}),
+                        onPressed: (() => model.returnFolder()),
                         icon: Icon(
                           Icons.backspace,
                           color: ThemeColors.mainText,
@@ -212,45 +212,54 @@ class FileSelector extends StatelessWidget {
                   crossAxisCount: 4,
                   children: model.folderContent
                       .map(
-                        (e) => Container(
-                          margin: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              border:
-                                  ThemeColors.setBorder(0, Colors.transparent),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8)),
-                              color: Colors.transparent),
-                          child: Row(children: [
-                            Icon(
-                              e.icon,
-                              size: 60,
-                              color: ThemeColors.mainText,
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    e.name,
-                                    style:
-                                        TextStyle(color: ThemeColors.mainText),
-                                  ),
-                                  Text(
-                                    e.modifiedDate,
-                                    style:
-                                        TextStyle(color: ThemeColors.mainText),
-                                  ),
-                                  Text(
-                                    e.size,
-                                    style:
-                                        TextStyle(color: ThemeColors.mainText),
-                                    textAlign: TextAlign.left,
-                                  )
-                                ],
+                        (e) => InkWell(
+                          onDoubleTap: () => model.folderSelected(e),
+                          onTap: () => model.gridElementSelected(e),
+                          child: Container(
+                            margin: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                border: ThemeColors.setBorder(
+                                    0,
+                                    e.isSelected
+                                        ? ThemeColors.cardBackground
+                                        : Colors.transparent),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(8)),
+                                color: e.isSelected
+                                    ? ThemeColors.cardBackground
+                                    : Colors.transparent),
+                            child: Row(children: [
+                              Icon(
+                                e.icon,
+                                size: 60,
+                                color: ThemeColors.mainText,
                               ),
-                            )
-                          ]),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      e.name,
+                                      style: TextStyle(
+                                          color: ThemeColors.mainText),
+                                    ),
+                                    Text(
+                                      e.modifiedDate,
+                                      style: TextStyle(
+                                          color: ThemeColors.mainText),
+                                    ),
+                                    Text(
+                                      e.size,
+                                      style: TextStyle(
+                                          color: ThemeColors.mainText),
+                                      textAlign: TextAlign.left,
+                                    )
+                                  ],
+                                ),
+                              )
+                            ]),
+                          ),
                         ),
                       )
                       .toList(),

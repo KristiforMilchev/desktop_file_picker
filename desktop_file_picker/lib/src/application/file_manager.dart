@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
-import 'package:flutter/material.dart';
 
 class FileManager implements IFileManager {
   @override
@@ -38,12 +37,15 @@ class FileManager implements IFileManager {
   @override
   Future<List<File>> getFiles(List<String> extensions, String path) async {
     var directory = Directory(path);
-    var entries = await directory.list().toList();
     List<File> result = [];
-    for (var element in entries) {
-      var exists = await File(element.path).exists();
-      if (exists) result.add(File(element.path));
-    }
+
+    try {
+      var entries = await directory.list().toList();
+      for (var element in entries) {
+        var exists = await File(element.path).exists();
+        if (exists) result.add(File(element.path));
+      }
+    } catch (Exception) {}
 
     return result;
   }
@@ -86,11 +88,12 @@ class FileManager implements IFileManager {
   Future<String> getDirectorySize(String directory) async {
     var files = await getFiles([], directory);
     var folderTotal = 0;
-    for (var element in files) {
-      var bytes = await element.length();
-      folderTotal += bytes;
-    }
-
+    try {
+      for (var element in files) {
+        var bytes = await element.length();
+        folderTotal += bytes;
+      }
+    } catch (Exception) {}
     return folderTotal.toString();
   }
 
@@ -98,14 +101,16 @@ class FileManager implements IFileManager {
   Future<String> getDirectorylastModified(String directory) async {
     var files = await getFiles([], directory);
     DateTime? lastModified;
-    for (var element in files) {
-      var current = await element.lastModified();
-      if (lastModified == null) {
-        lastModified = current;
-      } else if (lastModified.isBefore(current)) {
-        lastModified = current;
+    try {
+      for (var element in files) {
+        var current = await element.lastModified();
+        if (lastModified == null) {
+          lastModified = current;
+        } else if (lastModified.isBefore(current)) {
+          lastModified = current;
+        }
       }
-    }
+    } catch (Exception) {}
 
     return lastModified != null ? lastModified.toIso8601String() : "";
   }
