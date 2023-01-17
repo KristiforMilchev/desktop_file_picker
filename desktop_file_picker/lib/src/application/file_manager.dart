@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
+import 'package:flutter/material.dart';
 
 class FileManager implements IFileManager {
   @override
@@ -23,6 +24,12 @@ class FileManager implements IFileManager {
   }
 
   @override
+  Future<Directory?> getParentDirectory(String path) async {
+    var exists = await Directory(path).exists();
+    return exists ? Directory(path).parent : null;
+  }
+
+  @override
   Future<File?> getFile(String path) async {
     var exists = await File(path).exists();
     return exists ? File(path) : null;
@@ -41,23 +48,65 @@ class FileManager implements IFileManager {
     return result;
   }
 
-  String getOsDelimiter() {
-    String? result = "";
+  @override
+  String getOsDefault() {
+    String? home = "";
+    Map<String, String> envVars = Platform.environment;
     if (Platform.isMacOS) {
-      result = "/";
+      home = envVars['HOME'];
     } else if (Platform.isLinux) {
-      result = "/";
+      home = envVars['HOME'];
     } else if (Platform.isWindows) {
-      result = "\\";
+      home = envVars['UserProfile'];
     }
-    return result;
+
+    return home!;
   }
 
-  String getFileExtension(String file) {
-    return file.split('.').last;
+  @override
+  String? getOsFolders() {
+    String? path = "";
+    Map<String, String> envVars = Platform.environment;
+    var user;
+    if (Platform.isMacOS) {
+      user = envVars['USERNAME'];
+      path = "/media/$user";
+    } else if (Platform.isLinux) {
+      user = envVars['USERNAME'];
+      path = "/media/$user";
+    } else if (Platform.isWindows) {
+      user = envVars['USERNAME'];
+      path = "/media/$user";
+    }
+
+    return path;
   }
 
-  String getFileName(String file) {
-    return file.split("/").last.split(".").first;
+  @override
+  Future<String> getDirectorySize(String directory) async {
+    var files = await getFiles([], directory);
+    var folderTotal = 0;
+    for (var element in files) {
+      var bytes = await element.length();
+      folderTotal += bytes;
+    }
+
+    return folderTotal.toString();
+  }
+
+  @override
+  Future<String> getDirectorylastModified(String directory) async {
+    var files = await getFiles([], directory);
+    DateTime? lastModified;
+    for (var element in files) {
+      var current = await element.lastModified();
+      if (lastModified == null) {
+        lastModified = current;
+      } else if (lastModified.isBefore(current)) {
+        lastModified = current;
+      }
+    }
+
+    return lastModified != null ? lastModified.toIso8601String() : "";
   }
 }

@@ -5,4 +5,9 @@ abstract class IFileManager {
   Future<File?> getFile(String path);
   Future<List<Directory>> getDirectories(String path);
   Future<Directory?> getDirectory(String path);
+  Future<Directory?> getParentDirectory(String path);
+  String getOsDefault();
+  String? getOsFolders();
+  Future<String> getDirectorySize(String directory);
+  Future<String> getDirectorylastModified(String directory);
 }
