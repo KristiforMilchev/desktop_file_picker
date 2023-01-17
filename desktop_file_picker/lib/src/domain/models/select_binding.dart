@@ -10,6 +10,7 @@ class SelectBinding extends Equatable {
   late IconData icon;
   late bool isFolder;
   late bool isSelected;
+  late bool isVisible;
 
   SelectBinding({
     required this.name,
@@ -19,6 +20,7 @@ class SelectBinding extends Equatable {
     required this.icon,
     required this.isFolder,
     required this.isSelected,
+    required this.isVisible,
   });
 
   @override

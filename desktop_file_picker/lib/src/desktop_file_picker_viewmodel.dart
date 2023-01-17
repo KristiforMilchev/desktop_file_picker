@@ -20,10 +20,11 @@ class DesktopFilePickerViewModel extends BaseViewModel {
     icon: Icons.folder,
     isFolder: true,
     isSelected: false,
+    isVisible: true,
   );
 
   SelectBinding? get selectedDomainFolder => _selectedDomainFolder;
-
+  late List<SelectBinding> _originalContent = [];
   late List<SelectBinding> _folderContent = [];
   List<SelectBinding> get folderContent => _folderContent;
 
@@ -43,6 +44,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
             icon: Icons.folder,
             isFolder: true,
             isSelected: false,
+            isVisible: true,
           ),
         )
         .toList();
@@ -61,6 +63,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
       icon: Icons.abc,
       isFolder: true,
       isSelected: false,
+      isVisible: true,
     );
     var content = await _fileManager.getDirectories(path);
     var files = await _fileManager.getFiles([], path);
@@ -77,6 +80,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
           size: await _fileManager.getDirectorySize(e.path),
           isFolder: true,
           isSelected: false,
+          isVisible: true,
         ),
       );
     }
@@ -91,12 +95,14 @@ class DesktopFilePickerViewModel extends BaseViewModel {
           size: await Utilities.convertSizeAsync(e),
           isFolder: false,
           isSelected: false,
+          isVisible: true,
         ),
       );
     }
 
-    _folderContent.addAll(mappedContent);
-    _folderContent.addAll(mappedFiles);
+    _originalContent.addAll(mappedContent);
+    _originalContent.addAll(mappedFiles);
+    _folderContent = _originalContent;
   }
 
   returnFolder() async {
@@ -119,6 +125,21 @@ class DesktopFilePickerViewModel extends BaseViewModel {
       element.isSelected = false;
     });
     _folderContent.firstWhere((element) => element == e).isSelected = true;
+    notifyListeners();
+  }
+
+  searchChanged(String value) {
+    if (value.isEmpty) {
+      _folderContent = _originalContent;
+    } else {
+      var copy = _folderContent
+          .where((element) =>
+              element.name.toLowerCase().contains(value.toLowerCase()))
+          .toList();
+
+      _folderContent = copy;
+    }
+
     notifyListeners();
   }
 }
