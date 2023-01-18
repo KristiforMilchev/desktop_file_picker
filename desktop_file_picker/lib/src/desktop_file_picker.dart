@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 
 import 'application/file_manager.dart';
 import 'desktop_file_picker_viewmodel.dart';
+import 'domain/models/theme_data.dart';
 import 'domain/styles.dart';
 import 'infrastructure/ifile_manager.dart';
 
@@ -11,6 +12,7 @@ class FileSelector extends StatelessWidget {
   late bool? isSingleFile = true;
   late bool? isSingleFolder = false;
   late bool? isMultipleFiles = false;
+  late PickerThemeData? themeSettings;
   late Function callbackConfirm;
   late Function callbackCancel;
 
@@ -21,6 +23,7 @@ class FileSelector extends StatelessWidget {
     this.isMultipleFiles,
     this.isSingleFolder,
     this.extensions,
+    this.themeSettings,
     required this.callbackCancel,
     required this.callbackConfirm,
   });
@@ -39,10 +42,11 @@ class FileSelector extends StatelessWidget {
           isSingleFolder,
           isMultipleFiles,
           extensions ?? [],
+          themeSettings,
           callbackCancel,
           callbackConfirm),
       builder: (context, model, child) => Material(
-        color: ThemeColors.mainThemeBackground,
+        color: model.themeSettings!.mainBackground,
         child: Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,12 +62,12 @@ class FileSelector extends StatelessWidget {
                       child: ElevatedButton.icon(
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.resolveWith(
-                              (states) => ThemeColors.cardBackground),
+                              (states) => model.themeSettings!.buttonColor),
                         ),
                         onPressed: (() => {}),
                         icon: Icon(
                           Icons.folder_open,
-                          color: ThemeColors.mainText,
+                          color: model.themeSettings!.mainTextColor,
                           size: 48,
                         ),
                         label: Text(
@@ -86,16 +90,16 @@ class FileSelector extends StatelessWidget {
                       child: ElevatedButton.icon(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith(
-                                (states) => ThemeColors.cardBackground)),
+                                (states) => model.themeSettings!.buttonColor)),
                         onPressed: (() => model.returnFolder()),
                         icon: Icon(
                           Icons.backspace,
-                          color: ThemeColors.mainText,
+                          color: model.themeSettings!.mainTextColor,
                         ),
                         label: Text(
                           "Go back",
                           style: TextStyle(
-                            color: ThemeColors.mainText,
+                            color: model.themeSettings!.mainTextColor,
                           ),
                         ),
                       ),
@@ -107,7 +111,7 @@ class FileSelector extends StatelessWidget {
                         flex: 6,
                         child: TextField(
                           style: TextStyle(
-                            color: ThemeColors.mainText,
+                            color: model.themeSettings!.mainTextColor,
                             fontSize: 12,
                             height: 2,
                           ),
@@ -117,25 +121,27 @@ class FileSelector extends StatelessWidget {
                             enabledBorder: OutlineInputBorder(
                               // width: 0.0 produces a thin "hairline" border
                               borderSide: BorderSide(
-                                  color: ThemeColors.mainText, width: 0.0),
+                                  color: model.themeSettings!.inputBorderColor!,
+                                  width: 0.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               // width: 0.0 produces a thin "hairline" border
                               borderSide: BorderSide(
-                                  color: ThemeColors.mainText, width: 0.0),
+                                  color: model.themeSettings!.inputBorderColor!,
+                                  width: 0.0),
                             ),
                             border: const OutlineInputBorder(),
-                            focusColor: ThemeColors.innerText,
+                            focusColor: model.themeSettings!.inputFocusColor,
                             hoverColor: ThemeColors.activeMenu,
-                            fillColor: ThemeColors.mainText,
+                            fillColor: model.themeSettings!.mainTextColor,
                             hintStyle: TextStyle(
-                              color: ThemeColors.innerText,
+                              color: model.themeSettings!.mainTextColor,
                             ),
                             hintText: "Search for files and folders by name",
                             label: Text(
                               "Search",
                               style: TextStyle(
-                                color: ThemeColors.mainText,
+                                color: model.themeSettings!.mainTextColor,
                                 fontSize: 12,
                               ),
                             ),
@@ -150,17 +156,17 @@ class FileSelector extends StatelessWidget {
                         ElevatedButton.icon(
                           style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.resolveWith(
-                                      (states) => ThemeColors.cardBackground)),
+                                  MaterialStateProperty.resolveWith((states) =>
+                                      model.themeSettings!.buttonColor)),
                           onPressed: (() => {}),
                           icon: Icon(
                             Icons.text_format,
-                            color: ThemeColors.mainText,
+                            color: model.themeSettings!.mainTextColor,
                           ),
                           label: Text(
                             "Sort by name",
                             style: TextStyle(
-                              color: ThemeColors.mainText,
+                              color: model.themeSettings!.mainTextColor,
                             ),
                           ),
                         ),
@@ -168,17 +174,17 @@ class FileSelector extends StatelessWidget {
                         ElevatedButton.icon(
                           style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.resolveWith(
-                                      (states) => ThemeColors.cardBackground)),
+                                  MaterialStateProperty.resolveWith((states) =>
+                                      model.themeSettings!.buttonColor)),
                           onPressed: (() => {}),
                           icon: Icon(
                             Icons.date_range,
-                            color: ThemeColors.mainText,
+                            color: model.themeSettings!.mainTextColor,
                           ),
                           label: Text(
                             "Sort by date",
                             style: TextStyle(
-                              color: ThemeColors.mainText,
+                              color: model.themeSettings!.mainTextColor,
                             ),
                           ),
                         ),
@@ -186,17 +192,17 @@ class FileSelector extends StatelessWidget {
                         ElevatedButton.icon(
                           style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.resolveWith(
-                                      (states) => ThemeColors.cardBackground)),
+                                  MaterialStateProperty.resolveWith((states) =>
+                                      model.themeSettings!.buttonColor)),
                           onPressed: (() => {}),
                           icon: Icon(
                             Icons.summarize,
-                            color: ThemeColors.mainText,
+                            color: model.themeSettings!.mainTextColor,
                           ),
                           label: Text(
                             "Sort by size",
                             style: TextStyle(
-                              color: ThemeColors.mainText,
+                              color: model.themeSettings!.mainTextColor,
                             ),
                           ),
                         ),
@@ -204,17 +210,17 @@ class FileSelector extends StatelessWidget {
                         ElevatedButton.icon(
                           style: ButtonStyle(
                               backgroundColor:
-                                  MaterialStateProperty.resolveWith(
-                                      (states) => ThemeColors.cardBackground)),
+                                  MaterialStateProperty.resolveWith((states) =>
+                                      model.themeSettings!.buttonColor)),
                           onPressed: (() => {}),
                           icon: Icon(
                             Icons.type_specimen,
-                            color: ThemeColors.mainText,
+                            color: model.themeSettings!.mainTextColor,
                           ),
                           label: Text(
                             "Sort by type",
                             style: TextStyle(
-                              color: ThemeColors.mainText,
+                              color: model.themeSettings!.mainTextColor,
                             ),
                           ),
                         ),
@@ -246,18 +252,19 @@ class FileSelector extends StatelessWidget {
                                   border: ThemeColors.setBorder(
                                       0,
                                       e.isSelected
-                                          ? ThemeColors.cardBackground
+                                          ? model
+                                              .themeSettings!.selectedItemColor!
                                           : Colors.transparent),
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(8)),
                                   color: e.isSelected
-                                      ? ThemeColors.cardBackground
+                                      ? model.themeSettings!.selectedItemColor
                                       : Colors.transparent),
                               child: Row(children: [
                                 Icon(
                                   e.icon,
                                   size: 60,
-                                  color: ThemeColors.mainText,
+                                  color: model.themeSettings!.mainTextColor,
                                 ),
                                 Expanded(
                                   child: Column(
@@ -268,17 +275,20 @@ class FileSelector extends StatelessWidget {
                                       Text(
                                         e.name,
                                         style: TextStyle(
-                                            color: ThemeColors.mainText),
+                                            color: model
+                                                .themeSettings!.mainTextColor),
                                       ),
                                       Text(
                                         e.modifiedDate,
                                         style: TextStyle(
-                                            color: ThemeColors.mainText),
+                                            color: model
+                                                .themeSettings!.mainTextColor),
                                       ),
                                       Text(
                                         e.size,
                                         style: TextStyle(
-                                            color: ThemeColors.mainText),
+                                            color: model
+                                                .themeSettings!.mainTextColor),
                                         textAlign: TextAlign.left,
                                       )
                                     ],
@@ -303,7 +313,7 @@ class FileSelector extends StatelessWidget {
                     ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith(
-                                (states) => ThemeColors.cardBackground)),
+                                (states) => model.themeSettings!.buttonColor)),
                         onPressed: (() => model.dialogCancel()),
                         child: const Text("Cancel")),
                     const SizedBox(
@@ -312,7 +322,7 @@ class FileSelector extends StatelessWidget {
                     ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith(
-                                (states) => ThemeColors.cardBackground)),
+                                (states) => model.themeSettings!.buttonColor)),
                         onPressed: (() => model.confirmPressed()),
                         child: const Text("ok"))
                   ],

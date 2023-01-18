@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
+import 'domain/models/theme_data.dart';
+
 class DesktopFilePickerViewModel extends BaseViewModel {
   GetIt getIt = GetIt.I;
   late IFileManager _fileManager;
@@ -31,8 +33,11 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   late bool _isSingleFolder;
   late bool _isMultipleFiles;
   List<String> _extensions = [];
+  late PickerThemeData? _themeSettings;
   late Function _callbackCancel;
   late Function _callbackConfirm;
+
+  PickerThemeData? get themeSettings => _themeSettings;
 
   void commonPathSelected(value) {}
 
@@ -41,15 +46,21 @@ class DesktopFilePickerViewModel extends BaseViewModel {
       bool? isSingleFolder,
       bool? isMultipleFiles,
       List<String>? extensions,
+      PickerThemeData? themeSettings,
       Function callbackCancel,
       Function callbackConfirm) async {
     _isSingleFile = isSingleFile == null ? false : true;
     _isMultipleFiles = isMultipleFiles == null ? false : true;
     _isSingleFolder = isSingleFolder == null ? false : true;
     _extensions = extensions ?? [];
-
     _callbackCancel = callbackCancel;
     _callbackConfirm = callbackConfirm;
+
+    if (themeSettings != null) {
+      _themeSettings = Utilities.overrideDefault(themeSettings);
+    } else {
+      _themeSettings = Utilities.getDefaultTheme();
+    }
 
     _fileManager = getIt.get<IFileManager>();
     var getName = _fileManager.getOsFolders();

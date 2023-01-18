@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../domain/models/theme_data.dart';
+import '../../domain/styles.dart';
+
 class Utilities {
   static String getFileExtension(String file) {
     return file.split('.').last;
@@ -107,5 +110,47 @@ class Utilities {
     }
 
     return icon;
+  }
+
+  static PickerThemeData getDefaultTheme() {
+    return PickerThemeData(
+      mainTextColor: ThemeColors.mainText,
+      mainBackground: ThemeColors.mainThemeBackground,
+      inputColor: ThemeColors.mainText,
+      inputBorderColor: ThemeColors.mainText,
+      inputFocusColor: ThemeColors.innerText,
+      breadCrumbBackground: ThemeColors.cardBackground,
+      selectedItemColor: ThemeColors.cardBackground,
+      buttonColor: ThemeColors.cardBackground,
+      imageIcon: Icons.image_sharp,
+      videoIcon: Icons.video_file,
+      musicIcon: Icons.music_note_outlined,
+      archiveIcon: Icons.archive_outlined,
+      fileIcon: Icons.file_open,
+      folderIcon: Icons.folder,
+    );
+  }
+
+  static PickerThemeData overrideDefault(PickerThemeData pickerThemeData) {
+    return PickerThemeData(
+      mainTextColor: pickerThemeData.mainTextColor ?? ThemeColors.mainText,
+      mainBackground:
+          pickerThemeData.mainBackground ?? ThemeColors.mainThemeBackground,
+      inputColor: pickerThemeData.inputColor ?? ThemeColors.mainText,
+      inputBorderColor:
+          pickerThemeData.inputBorderColor ?? ThemeColors.mainText,
+      inputFocusColor: pickerThemeData.inputFocusColor ?? ThemeColors.innerText,
+      breadCrumbBackground:
+          pickerThemeData.breadCrumbBackground ?? ThemeColors.cardBackground,
+      selectedItemColor:
+          pickerThemeData.selectedItemColor ?? ThemeColors.cardBackground,
+      buttonColor: pickerThemeData.buttonColor ?? ThemeColors.cardBackground,
+      imageIcon: pickerThemeData.imageIcon ?? Icons.image_sharp,
+      videoIcon: pickerThemeData.videoIcon ?? Icons.video_file,
+      musicIcon: pickerThemeData.musicIcon ?? Icons.music_note_outlined,
+      archiveIcon: pickerThemeData.archiveIcon ?? Icons.archive_outlined,
+      fileIcon: pickerThemeData.fileIcon ?? Icons.file_open,
+      folderIcon: pickerThemeData.folderIcon ?? Icons.folder,
+    );
   }
 }
