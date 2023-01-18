@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:desktop_file_picker/src/application/converters/utilities.dart';
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
 
 class FileManager implements IFileManager {
@@ -43,7 +44,16 @@ class FileManager implements IFileManager {
       var entries = await directory.list().toList();
       for (var element in entries) {
         var exists = await File(element.path).exists();
-        if (exists) result.add(File(element.path));
+
+        if (exists) {
+          var extension = Utilities.getFileExtension(element.path);
+          if (extensions.isNotEmpty) {
+            var contains = extensions.contains(extension);
+            if (contains) result.add(File(element.path));
+          } else {
+            result.add(File(element.path));
+          }
+        }
       }
     } catch (Exception) {}
 

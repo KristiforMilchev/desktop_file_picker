@@ -8,16 +8,39 @@ import 'domain/styles.dart';
 import 'infrastructure/ifile_manager.dart';
 
 class FileSelector extends StatelessWidget {
-  const FileSelector({super.key});
+  late bool? isSingleFile = true;
+  late bool? isSingleFolder = false;
+  late bool? isMultipleFiles = false;
+  late Function callbackConfirm;
+  late Function callbackCancel;
+
+  List<String>? extensions = [];
+  FileSelector({
+    super.key,
+    this.isSingleFile,
+    this.isMultipleFiles,
+    this.isSingleFolder,
+    this.extensions,
+    required this.callbackCancel,
+    required this.callbackConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
     GetIt getIt = GetIt.I;
-    getIt.registerSingleton<IFileManager>(FileManager());
+    if (!getIt.isRegistered<IFileManager>()) {
+      getIt.registerSingleton<IFileManager>(FileManager());
+    }
 
     return ViewModelBuilder.reactive(
       viewModelBuilder: (() => DesktopFilePickerViewModel()),
-      onModelReady: (viewModel) => viewModel.initialize(),
+      onModelReady: (viewModel) => viewModel.initialize(
+          isSingleFile,
+          isSingleFolder,
+          isMultipleFiles,
+          extensions ?? [],
+          callbackCancel,
+          callbackConfirm),
       builder: (context, model, child) => Material(
         color: ThemeColors.mainThemeBackground,
         child: Expanded(
@@ -281,7 +304,7 @@ class FileSelector extends StatelessWidget {
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith(
                                 (states) => ThemeColors.cardBackground)),
-                        onPressed: (() => {}),
+                        onPressed: (() => model.dialogCancel()),
                         child: const Text("Cancel")),
                     const SizedBox(
                       width: 10,
@@ -290,7 +313,7 @@ class FileSelector extends StatelessWidget {
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.resolveWith(
                                 (states) => ThemeColors.cardBackground)),
-                        onPressed: (() => {}),
+                        onPressed: (() => model.confirmPressed()),
                         child: const Text("ok"))
                   ],
                 ),
