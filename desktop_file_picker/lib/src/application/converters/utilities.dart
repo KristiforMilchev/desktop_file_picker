@@ -18,12 +18,12 @@ class Utilities {
     return result;
   }
 
-  static Future<String> convertDateAsync(File e) async {
+  static Future<DateTime?> convertDateAsync(File e) async {
     try {
       var result = await e.lastModified();
-      return result.toIso8601String();
+      return result;
     } catch (exception) {
-      return "";
+      return null;
     }
   }
 

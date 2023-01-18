@@ -9,5 +9,5 @@ abstract class IFileManager {
   String getOsDefault();
   String? getOsFolders();
   Future<String> getDirectorySize(String directory);
-  Future<String> getDirectorylastModified(String directory);
+  Future<DateTime?> getDirectorylastModified(String directory);
 }

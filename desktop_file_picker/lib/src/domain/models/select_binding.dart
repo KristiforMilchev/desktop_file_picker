@@ -1,11 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 // ignore: must_be_immutable
 class SelectBinding extends Equatable {
   late String name;
+  late String extension;
   late String path;
-  late String modifiedDate;
+  late DateTime? modifiedDate;
   late String size;
   late IconData icon;
   late bool isFolder;
@@ -14,8 +16,9 @@ class SelectBinding extends Equatable {
 
   SelectBinding({
     required this.name,
+    required this.extension,
     required this.path,
-    required this.modifiedDate,
+    this.modifiedDate,
     required this.size,
     required this.icon,
     required this.isFolder,
@@ -24,5 +27,5 @@ class SelectBinding extends Equatable {
   });
 
   @override
-  List<Object?> get props => [name, path];
+  List<Object?> get props => [name, path, extension, modifiedDate];
 }

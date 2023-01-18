@@ -14,10 +14,16 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   late List<SelectBinding> _commonPaths = [];
   List<SelectBinding> get commonPaths => _commonPaths;
 
+  late bool _filterName;
+  late bool _filterDate;
+  late bool _filterSize;
+  late bool _filterType;
+
   late SelectBinding? _selectedDomainFolder = SelectBinding(
     name: "name",
     path: "",
-    modifiedDate: "",
+    extension: "folder",
+    modifiedDate: null,
     size: "",
     icon: Icons.folder,
     isFolder: true,
@@ -62,6 +68,11 @@ class DesktopFilePickerViewModel extends BaseViewModel {
       _themeSettings = Utilities.getDefaultTheme();
     }
 
+    _filterDate = false;
+    _filterSize = false;
+    _filterName = false;
+    _filterType = false;
+
     _fileManager = getIt.get<IFileManager>();
     var getName = _fileManager.getOsFolders();
     var folders = await _fileManager.getDirectories(getName!);
@@ -69,8 +80,8 @@ class DesktopFilePickerViewModel extends BaseViewModel {
         .map(
           (e) => SelectBinding(
             name: Utilities.getFileName(e.path),
+            extension: "folder",
             path: e.path,
-            modifiedDate: "",
             size: "",
             icon: Icons.folder,
             isFolder: true,
@@ -89,7 +100,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
     _selectedDomainFolder = SelectBinding(
       name: path,
       path: path,
-      modifiedDate: "",
+      extension: "folder",
       size: "",
       icon: Icons.abc,
       isFolder: true,
@@ -104,6 +115,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
         SelectBinding(
           icon: Icons.folder,
           name: Utilities.getFolderName(e.path),
+          extension: "folder",
           path: e.path,
           modifiedDate: await _fileManager.getDirectorylastModified(e.path),
           size: await _fileManager.getDirectorySize(e.path),
@@ -124,6 +136,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
           SelectBinding(
             icon: Utilities.getExtensionIcon(e.path),
             name: Utilities.getFileName(e.path),
+            extension: Utilities.getFileExtension(e.path),
             path: e.path,
             modifiedDate: await Utilities.convertDateAsync(e),
             size: await Utilities.convertSizeAsync(e),
@@ -208,5 +221,86 @@ class DesktopFilePickerViewModel extends BaseViewModel {
 
   dialogCancel() {
     _callbackCancel.call();
+  }
+
+  sortByName() {
+    if (!_filterName) {
+      _folderContent = (_folderContent
+            ..sort((a, b) => a.name.compareTo(b.name)))
+          .reversed
+          .toList();
+      _filterName = true;
+    } else {
+      _folderContent.sort((a, b) => a.name.compareTo(b.name));
+      _filterName = false;
+    }
+
+    notifyListeners();
+  }
+
+  sortByDate() {
+    if (!_filterDate) {
+      _folderContent = (_folderContent
+            ..sort((a, b) => dateSortComparison(a, b)))
+          .reversed
+          .toList();
+      _filterDate = true;
+    } else {
+      _folderContent.sort((a, b) => dateSortComparison(a, b));
+
+      _filterDate = false;
+    }
+
+    notifyListeners();
+  }
+
+  sortBySize() {
+    if (!_filterSize) {
+      _folderContent = (_folderContent..sort((a, b) => sizeComparison(a, b)))
+          .reversed
+          .toList();
+      _filterSize = true;
+    } else {
+      _folderContent.sort((a, b) => sizeComparison(a, b));
+
+      _filterSize = false;
+    }
+
+    notifyListeners();
+  }
+
+  sortByType() {
+    if (!_filterType) {
+      _folderContent = (_folderContent
+            ..sort((a, b) => a.extension.compareTo(b.extension)))
+          .reversed
+          .toList();
+      _filterType = true;
+    } else {
+      _folderContent.sort((a, b) => a.extension.compareTo(b.extension));
+      _filterType = false;
+    }
+
+    notifyListeners();
+  }
+
+  dateSortComparison(SelectBinding a, SelectBinding b) {
+    var aDate = a.modifiedDate ?? DateTime.now();
+    var bDate = b.modifiedDate ?? DateTime.now();
+    var isBefore = aDate.isBefore(bDate);
+    if (isBefore) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
+  sizeComparison(SelectBinding a, SelectBinding b) {
+    var isBefore = int.parse(a.size) > int.parse(b.size);
+    if (isBefore) {
+      return 1;
+    } else {
+      return -1;
+    }
   }
 }

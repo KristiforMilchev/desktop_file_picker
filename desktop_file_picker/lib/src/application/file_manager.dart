@@ -108,7 +108,7 @@ class FileManager implements IFileManager {
   }
 
   @override
-  Future<String> getDirectorylastModified(String directory) async {
+  Future<DateTime?> getDirectorylastModified(String directory) async {
     var files = await getFiles([], directory);
     DateTime? lastModified;
     try {
@@ -122,6 +122,6 @@ class FileManager implements IFileManager {
       }
     } catch (Exception) {}
 
-    return lastModified != null ? lastModified.toIso8601String() : "";
+    return lastModified ?? null;
   }
 }

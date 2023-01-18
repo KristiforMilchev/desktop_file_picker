@@ -158,7 +158,7 @@ class FileSelector extends StatelessWidget {
                               backgroundColor:
                                   MaterialStateProperty.resolveWith((states) =>
                                       model.themeSettings!.buttonColor)),
-                          onPressed: (() => {}),
+                          onPressed: (() => model.sortByName()),
                           icon: Icon(
                             Icons.text_format,
                             color: model.themeSettings!.mainTextColor,
@@ -176,7 +176,7 @@ class FileSelector extends StatelessWidget {
                               backgroundColor:
                                   MaterialStateProperty.resolveWith((states) =>
                                       model.themeSettings!.buttonColor)),
-                          onPressed: (() => {}),
+                          onPressed: (() => model.sortByDate()),
                           icon: Icon(
                             Icons.date_range,
                             color: model.themeSettings!.mainTextColor,
@@ -194,7 +194,7 @@ class FileSelector extends StatelessWidget {
                               backgroundColor:
                                   MaterialStateProperty.resolveWith((states) =>
                                       model.themeSettings!.buttonColor)),
-                          onPressed: (() => {}),
+                          onPressed: (() => model.sortBySize()),
                           icon: Icon(
                             Icons.summarize,
                             color: model.themeSettings!.mainTextColor,
@@ -212,7 +212,7 @@ class FileSelector extends StatelessWidget {
                               backgroundColor:
                                   MaterialStateProperty.resolveWith((states) =>
                                       model.themeSettings!.buttonColor)),
-                          onPressed: (() => {}),
+                          onPressed: (() => model.sortByType()),
                           icon: Icon(
                             Icons.type_specimen,
                             color: model.themeSettings!.mainTextColor,
@@ -279,7 +279,9 @@ class FileSelector extends StatelessWidget {
                                                 .themeSettings!.mainTextColor),
                                       ),
                                       Text(
-                                        e.modifiedDate,
+                                        e.modifiedDate != null
+                                            ? e.modifiedDate!.toIso8601String()
+                                            : "",
                                         style: TextStyle(
                                             color: model
                                                 .themeSettings!.mainTextColor),
