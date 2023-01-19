@@ -64,7 +64,7 @@ class FileSelector extends StatelessWidget {
                           backgroundColor: MaterialStateProperty.resolveWith(
                               (states) => model.themeSettings!.buttonColor),
                         ),
-                        onPressed: (() => {}),
+                        onPressed: (() => model.changeMountPoint()),
                         icon: Icon(
                           Icons.folder_open,
                           color: model.themeSettings!.mainTextColor,
@@ -229,79 +229,160 @@ class FileSelector extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: GridView.count(
-                  primary: false,
-                  shrinkWrap: false,
-                  childAspectRatio: 3,
-                  padding: const EdgeInsets.all(20),
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 0,
-                  crossAxisCount: 4,
-                  children: model.folderContent
-                      .map(
-                        (e) => Visibility(
-                          visible: e.isVisible,
-                          child: InkWell(
-                            onDoubleTap: () => model.folderSelected(e),
-                            onTap: () => model.gridElementSelected(e),
-                            child: Container(
-                              margin: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  border: ThemeColors.setBorder(
-                                      0,
-                                      e.isSelected
-                                          ? model
-                                              .themeSettings!.selectedItemColor!
-                                          : Colors.transparent),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8)),
-                                  color: e.isSelected
-                                      ? model.themeSettings!.selectedItemColor
-                                      : Colors.transparent),
-                              child: Row(children: [
-                                Icon(
-                                  e.icon,
-                                  size: 60,
-                                  color: model.themeSettings!.mainTextColor,
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        e.name,
-                                        style: TextStyle(
-                                            color: model
-                                                .themeSettings!.mainTextColor),
-                                      ),
-                                      Text(
-                                        e.modifiedDate != null
-                                            ? e.modifiedDate!.toIso8601String()
-                                            : "",
-                                        style: TextStyle(
-                                            color: model
-                                                .themeSettings!.mainTextColor),
-                                      ),
-                                      Text(
-                                        e.size,
-                                        style: TextStyle(
-                                            color: model
-                                                .themeSettings!.mainTextColor),
-                                        textAlign: TextAlign.left,
-                                      )
-                                    ],
+              Visibility(
+                visible: model.isMountPointSelected,
+                replacement: Expanded(
+                  flex: 2,
+                  child: GridView.count(
+                    primary: false,
+                    shrinkWrap: false,
+                    childAspectRatio: 3,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 0,
+                    crossAxisCount: 4,
+                    children: model.folderContent
+                        .map(
+                          (e) => Visibility(
+                            visible: e.isVisible,
+                            child: InkWell(
+                              onDoubleTap: () => model.folderSelected(e),
+                              onTap: () => model.gridElementSelected(e),
+                              child: Container(
+                                margin: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    border: ThemeColors.setBorder(
+                                        0,
+                                        e.isSelected
+                                            ? model.themeSettings!
+                                                .selectedItemColor!
+                                            : Colors.transparent),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8)),
+                                    color: e.isSelected
+                                        ? model.themeSettings!.selectedItemColor
+                                        : Colors.transparent),
+                                child: Row(children: [
+                                  Icon(
+                                    e.icon,
+                                    size: 60,
+                                    color: model.themeSettings!.mainTextColor,
                                   ),
-                                )
-                              ]),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          e.name,
+                                          style: TextStyle(
+                                              color: model.themeSettings!
+                                                  .mainTextColor),
+                                        ),
+                                        Text(
+                                          e.modifiedDate != null
+                                              ? e.modifiedDate!
+                                                  .toIso8601String()
+                                              : "",
+                                          style: TextStyle(
+                                              color: model.themeSettings!
+                                                  .mainTextColor),
+                                        ),
+                                        Text(
+                                          e.size,
+                                          style: TextStyle(
+                                              color: model.themeSettings!
+                                                  .mainTextColor),
+                                          textAlign: TextAlign.left,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
+                ),
+                child: Expanded(
+                  flex: 2,
+                  child: GridView.count(
+                    primary: false,
+                    shrinkWrap: false,
+                    childAspectRatio: 3,
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 0,
+                    crossAxisCount: 4,
+                    children: model.commonPaths
+                        .map(
+                          (e) => Visibility(
+                            visible: e.isVisible,
+                            child: InkWell(
+                              onTap: () => model.commonPathSelected(e),
+                              child: Container(
+                                margin: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    border: ThemeColors.setBorder(
+                                        0,
+                                        e.isSelected
+                                            ? model.themeSettings!
+                                                .selectedItemColor!
+                                            : Colors.transparent),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8)),
+                                    color: e.isSelected
+                                        ? model.themeSettings!.selectedItemColor
+                                        : Colors.transparent),
+                                child: Row(children: [
+                                  Icon(
+                                    e.icon,
+                                    size: 60,
+                                    color: model.themeSettings!.mainTextColor,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          e.name,
+                                          style: TextStyle(
+                                              color: model.themeSettings!
+                                                  .mainTextColor),
+                                        ),
+                                        Text(
+                                          e.modifiedDate != null
+                                              ? e.modifiedDate!
+                                                  .toIso8601String()
+                                              : "",
+                                          style: TextStyle(
+                                              color: model.themeSettings!
+                                                  .mainTextColor),
+                                        ),
+                                        Text(
+                                          e.size,
+                                          style: TextStyle(
+                                              color: model.themeSettings!
+                                                  .mainTextColor),
+                                          textAlign: TextAlign.left,
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
               Divider(

@@ -2,6 +2,7 @@ import 'package:desktop_file_picker/src/application/converters/utilities.dart';
 import 'package:desktop_file_picker/src/domain/models/select_binding.dart';
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
@@ -31,6 +32,9 @@ class DesktopFilePickerViewModel extends BaseViewModel {
     isVisible: true,
   );
 
+  late bool _isMountPointSelected = false;
+  bool get isMountPointSelected => _isMountPointSelected;
+
   SelectBinding? get selectedDomainFolder => _selectedDomainFolder;
   late List<SelectBinding> _originalContent = [];
   late List<SelectBinding> _folderContent = [];
@@ -44,8 +48,6 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   late Function _callbackConfirm;
 
   PickerThemeData? get themeSettings => _themeSettings;
-
-  void commonPathSelected(value) {}
 
   void initialize(
       bool? isSingleFile,
@@ -61,7 +63,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
     _extensions = extensions ?? [];
     _callbackCancel = callbackCancel;
     _callbackConfirm = callbackConfirm;
-
+    _isMountPointSelected = false;
     if (themeSettings != null) {
       _themeSettings = Utilities.overrideDefault(themeSettings);
     } else {
@@ -75,15 +77,15 @@ class DesktopFilePickerViewModel extends BaseViewModel {
 
     _fileManager = getIt.get<IFileManager>();
     var getName = _fileManager.getOsFolders();
-    var folders = await _fileManager.getDirectories(getName!);
+    var folders = await _fileManager.getDesktopDrives();
     _commonPaths = folders
         .map(
           (e) => SelectBinding(
-            name: Utilities.getFileName(e.path),
-            extension: "folder",
+            name: e.path,
+            extension: "hardrive",
             path: e.path,
             size: "",
-            icon: Icons.folder,
+            icon: Icons.storage,
             isFolder: true,
             isSelected: false,
             isVisible: true,
@@ -165,6 +167,12 @@ class DesktopFilePickerViewModel extends BaseViewModel {
     if (!e.isFolder) return;
 
     await openFolder(e.path);
+    notifyListeners();
+  }
+
+  void commonPathSelected(SelectBinding value) async {
+    _isMountPointSelected = !isMountPointSelected;
+    await openFolder(value.path);
     notifyListeners();
   }
 
@@ -302,5 +310,10 @@ class DesktopFilePickerViewModel extends BaseViewModel {
     } else {
       return -1;
     }
+  }
+
+  changeMountPoint() {
+    _isMountPointSelected = !_isMountPointSelected;
+    notifyListeners();
   }
 }

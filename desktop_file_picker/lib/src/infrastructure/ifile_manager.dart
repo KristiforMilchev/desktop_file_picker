@@ -10,4 +10,5 @@ abstract class IFileManager {
   String? getOsFolders();
   Future<String> getDirectorySize(String directory);
   Future<DateTime?> getDirectorylastModified(String directory);
+  Future<List<Directory>> getDesktopDrives();
 }

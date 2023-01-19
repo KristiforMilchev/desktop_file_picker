@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:desktop_file_picker/src/application/converters/utilities.dart';
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
+import 'package:disks_desktop/src/repositories/disks_repository.dart';
 
 class FileManager implements IFileManager {
   @override
@@ -10,8 +11,10 @@ class FileManager implements IFileManager {
     var entries = await directory.list().toList();
     List<Directory> result = [];
     for (var element in entries) {
-      var exists = await Directory(element.path).exists();
-      if (exists) result.add(Directory(element.path));
+      try {
+        var exists = await Directory(element.path).exists();
+        if (exists) result.add(Directory(element.path));
+      } catch (Exception) {}
     }
 
     return result;
@@ -88,7 +91,7 @@ class FileManager implements IFileManager {
       path = "/media/$user";
     } else if (Platform.isWindows) {
       user = envVars['USERNAME'];
-      path = "/media/$user";
+      path = "C:";
     }
 
     return path;
@@ -123,5 +126,19 @@ class FileManager implements IFileManager {
     } catch (Exception) {}
 
     return lastModified ?? null;
+  }
+
+  @override
+  Future<List<Directory>> getDesktopDrives() async {
+    final repository = DisksRepository();
+    final disks = await repository.query;
+    List<Directory> result = [];
+    disks.forEach((element) {
+      if (element.mountpoints.isNotEmpty) {
+        result.add(Directory(element.mountpoints.first.path));
+      }
+    });
+
+    return result;
   }
 }
