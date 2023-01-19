@@ -1,39 +1,82 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+# Desktop File Picker
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+desktop_file_picker package lets you initialize a desktop file picker written in dart.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# Supported filters
 
-## Features
+By name
+By type
+By drive
+By size
+By date
+By name
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+# Supported Modes
+Single file
+Multople Files
+Single Folder
 
-## Getting started
+## Installation 
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
+1. Add the latest version of package to your pubspec.yaml (and run`flutter pub get`):
+```yaml
+dependencies:
+  desktop_file_picker: ^0.0.1
+```
+2. Import the package and use it in your Flutter App.
 ```dart
-const like = 'sample';
+import 'package:desktop_file_picker/desktop_file_picker.dart';
 ```
 
-## Additional information
+## Customizing the picker
+There are a number of properties that you can modify:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+ - Main background
+ - Font color               
+ - Icons 
+ - Button Color
+ - Input Color
+ - Input border color
+ - Selected item color
+ - Main Text Color
+
+<hr>
+
+<table>
+<tr>
+<td>
+
+```dart
+class DesktopPickerView extends StatelessWidget {  
+  const DesktopPickerView({Key? key}) : super(key: key);  
+  
+  @override  
+  Widget build(BuildContext context) {  
+    return Scaffold(  
+      body: Center(  
+        child:  FileSelector(
+            isSingleFolder: true,
+            callbackCancel: () => Navigator.of(context).pop(),
+            callbackConfirm: (data) {
+                Navigator.of(context).pop();
+                confirmCallBack.call(data);
+            })
+      ),  
+    );  
+  }  
+}
+```
+
+</td>
+<td>
+<img  src="https://linksync.tech/picker.png"  alt="">
+</td>
+</tr>
+</table>
+
+## Next Goals
+
+ - [] Add save file dialog option.
+ Now, you can specify the onTap and specify a function.
+ 

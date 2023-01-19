@@ -1,7 +1,7 @@
 name: desktop_file_picker
-description: A new Flutter package project.
+description: A simple desktop file picker build entirely in dart.
 version: 0.0.1
-homepage:
+homepage: https://github.com/KristiforMilchev/desktop_file_picker
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
