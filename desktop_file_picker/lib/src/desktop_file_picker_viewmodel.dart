@@ -98,6 +98,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   }
 
   Future openFolder(String path) async {
+    _originalContent.clear();
     _folderContent.clear();
     _selectedDomainFolder = SelectBinding(
       name: path,
