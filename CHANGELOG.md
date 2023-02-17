@@ -1,3 +1,11 @@
+## 0.0.2
+Scaling issue fixes for smaller and bigger devices
+Added an example application in the github repository
+Code refactoring to improve loading speed.
+Added text trimming to long file names to ensure the content grid doesn't break.
+
+
+
 ## 0.0.1
 
 Filtering by name
