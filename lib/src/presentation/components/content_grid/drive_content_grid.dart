@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../desktop_file_picker_viewmodel.dart';
 import '../../../domain/styles.dart';
 
+// ignore: must_be_immutable
 class DriveContentGrid extends StatelessWidget {
   late DesktopFilePickerViewModel model;
 
