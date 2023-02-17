@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 import '../../../../desktop_file_picker_viewmodel.dart';
 import '../../../../domain/styles.dart';
@@ -50,7 +49,7 @@ class SmallNavigation extends StatelessWidget {
                   ),
                   onChanged: (value) => model.searchChanged(value),
                   decoration: InputDecoration(
-                    constraints: BoxConstraints(maxHeight: 35),
+                    constraints: const BoxConstraints(maxHeight: 35),
                     enabledBorder: OutlineInputBorder(
                       // width: 0.0 produces a thin "hairline" border
                       borderSide: BorderSide(

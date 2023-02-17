@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:desktop_file_picker/src/application/converters/utilities.dart';
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
-import 'package:disks_desktop/src/repositories/disks_repository.dart';
+import 'package:disks_desktop/disks_desktop.dart';
 
 class FileManager implements IFileManager {
   @override
@@ -14,7 +14,9 @@ class FileManager implements IFileManager {
       try {
         var exists = await Directory(element.path).exists();
         if (exists) result.add(Directory(element.path));
-      } catch (Exception) {}
+      } catch (currentException) {
+        //Not implemented
+      }
     }
 
     return result;
@@ -58,7 +60,9 @@ class FileManager implements IFileManager {
           }
         }
       }
-    } catch (Exception) {}
+    } catch (currentException) {
+      //Not implemented Logging v3
+    }
 
     return result;
   }
@@ -82,7 +86,7 @@ class FileManager implements IFileManager {
   String? getOsFolders() {
     String? path = "";
     Map<String, String> envVars = Platform.environment;
-    var user;
+    String? user;
     if (Platform.isMacOS) {
       user = envVars['USERNAME'];
       path = "/media/$user";
@@ -106,7 +110,9 @@ class FileManager implements IFileManager {
         var bytes = await element.length();
         folderTotal += bytes;
       }
-    } catch (Exception) {}
+    } catch (currentException) {
+      //Not implemented v3 Logging
+    }
     return folderTotal.toString();
   }
 
@@ -123,9 +129,11 @@ class FileManager implements IFileManager {
           lastModified = current;
         }
       }
-    } catch (Exception) {}
+    } catch (currentException) {
+      //Not implemented v3 Logging
+    }
 
-    return lastModified ?? null;
+    return lastModified;
   }
 
   @override
@@ -133,11 +141,11 @@ class FileManager implements IFileManager {
     final repository = DisksRepository();
     final disks = await repository.query;
     List<Directory> result = [];
-    disks.forEach((element) {
+    for (var element in disks) {
       if (element.mountpoints.isNotEmpty) {
         result.add(Directory(element.mountpoints.first.path));
       }
-    });
+    }
 
     return result;
   }

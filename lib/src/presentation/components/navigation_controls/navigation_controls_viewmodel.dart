@@ -14,8 +14,6 @@ class NavigationControlsViewModel extends BaseViewModel {
   void panelResized() {
     var currentSize = MediaQuery.of(_context).size;
 
-    print(currentSize.width);
-
     if (currentSize.width > 1300) {
       _viewState = 1;
     }

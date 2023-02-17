@@ -36,7 +36,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   bool get isMountPointSelected => _isMountPointSelected;
 
   SelectBinding? get selectedDomainFolder => _selectedDomainFolder;
-  late List<SelectBinding> _originalContent = [];
+  late final List<SelectBinding> _originalContent = [];
   late List<SelectBinding> _folderContent = [];
   List<SelectBinding> get folderContent => _folderContent;
   late bool _isSingleFile;
