@@ -30,6 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
+  stacked: ^3.0.1
   desktop_file_picker:
     path: "../"
 
