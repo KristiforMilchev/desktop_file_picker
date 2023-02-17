@@ -60,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Center(
         child: FileSelector(
-          isSingleFolder: true,
+          isSingleFile: true,
           callbackCancel: () => Navigator.of(context).pop(),
           callbackConfirm: (data) {
             Navigator.of(context).pop();
