@@ -2,7 +2,6 @@ import 'package:desktop_file_picker/src/application/converters/utilities.dart';
 import 'package:desktop_file_picker/src/domain/models/select_binding.dart';
 import 'package:desktop_file_picker/src/infrastructure/ifile_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
@@ -11,6 +10,7 @@ import 'domain/models/theme_data.dart';
 class DesktopFilePickerViewModel extends BaseViewModel {
   GetIt getIt = GetIt.I;
   late IFileManager _fileManager;
+  late BuildContext _context;
 
   late List<SelectBinding> _commonPaths = [];
   List<SelectBinding> get commonPaths => _commonPaths;
@@ -36,7 +36,7 @@ class DesktopFilePickerViewModel extends BaseViewModel {
   bool get isMountPointSelected => _isMountPointSelected;
 
   SelectBinding? get selectedDomainFolder => _selectedDomainFolder;
-  late List<SelectBinding> _originalContent = [];
+  late final List<SelectBinding> _originalContent = [];
   late List<SelectBinding> _folderContent = [];
   List<SelectBinding> get folderContent => _folderContent;
   late bool _isSingleFile;
@@ -49,14 +49,19 @@ class DesktopFilePickerViewModel extends BaseViewModel {
 
   PickerThemeData? get themeSettings => _themeSettings;
 
+  late int _axieItemCount = 4;
+  get axieItemCount => _axieItemCount;
+
   void initialize(
-      bool? isSingleFile,
-      bool? isSingleFolder,
-      bool? isMultipleFiles,
-      List<String>? extensions,
-      PickerThemeData? themeSettings,
-      Function callbackCancel,
-      Function callbackConfirm) async {
+    bool? isSingleFile,
+    bool? isSingleFolder,
+    bool? isMultipleFiles,
+    List<String>? extensions,
+    PickerThemeData? themeSettings,
+    Function callbackCancel,
+    Function callbackConfirm,
+    BuildContext context,
+  ) async {
     _isSingleFile = isSingleFile == null ? false : true;
     _isMultipleFiles = isMultipleFiles == null ? false : true;
     _isSingleFolder = isSingleFolder == null ? false : true;
@@ -70,13 +75,14 @@ class DesktopFilePickerViewModel extends BaseViewModel {
       _themeSettings = Utilities.getDefaultTheme();
     }
 
+    _context = context;
+
     _filterDate = false;
     _filterSize = false;
     _filterName = false;
     _filterType = false;
 
     _fileManager = getIt.get<IFileManager>();
-    var getName = _fileManager.getOsFolders();
     var folders = await _fileManager.getDesktopDrives();
     _commonPaths = folders
         .map(
@@ -315,6 +321,26 @@ class DesktopFilePickerViewModel extends BaseViewModel {
 
   changeMountPoint() {
     _isMountPointSelected = !_isMountPointSelected;
+    notifyListeners();
+  }
+
+  gridResized() {
+    var currentSize = MediaQuery.of(_context).size;
+
+    if (currentSize.width < 400) {
+      _axieItemCount = 1;
+    } else if (currentSize.width < 600) {
+      _axieItemCount = 2;
+    } else if (currentSize.width < 900) {
+      _axieItemCount = 3;
+    } else if (currentSize.width > 900 && currentSize.width < 1600) {
+      _axieItemCount = 4;
+    } else if (currentSize.width > 1600 && currentSize.width < 2200) {
+      _axieItemCount = 8;
+    } else if (currentSize.width > 2300) {
+      _axieItemCount = 12;
+    }
+
     notifyListeners();
   }
 }
