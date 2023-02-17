@@ -37,17 +37,23 @@ class FileSelector extends StatelessWidget {
 
     return ViewModelBuilder.reactive(
       viewModelBuilder: (() => DesktopFilePickerViewModel()),
-      onModelReady: (viewModel) => viewModel.initialize(
-          isSingleFile,
-          isSingleFolder,
-          isMultipleFiles,
-          extensions ?? [],
-          themeSettings,
-          callbackCancel,
-          callbackConfirm),
+      onViewModelReady: (viewModel) => viewModel.initialize(
+        isSingleFile,
+        isSingleFolder,
+        isMultipleFiles,
+        extensions ?? [],
+        themeSettings,
+        callbackCancel,
+        callbackConfirm,
+        context,
+      ),
       builder: (context, model, child) => Material(
         color: model.themeSettings!.mainBackground,
-        child: Expanded(
+        child: NotificationListener(
+          onNotification: (notification) {
+            model.gridResized();
+            return true;
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
@@ -57,24 +63,21 @@ class FileSelector extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.all(20),
-                    child: Expanded(
-                      flex: 10,
-                      child: ElevatedButton.icon(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.resolveWith(
-                              (states) => model.themeSettings!.buttonColor),
-                        ),
-                        onPressed: (() => model.changeMountPoint()),
-                        icon: Icon(
-                          Icons.folder_open,
-                          color: model.themeSettings!.mainTextColor,
-                          size: 48,
-                        ),
-                        label: Text(
-                          model.selectedDomainFolder!.name,
-                          style: TextStyle(
-                              color: ThemeColors.mainText, fontSize: 48),
-                        ),
+                    child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.resolveWith(
+                            (states) => model.themeSettings!.buttonColor),
+                      ),
+                      onPressed: (() => model.changeMountPoint()),
+                      icon: Icon(
+                        Icons.folder_open,
+                        color: model.themeSettings!.mainTextColor,
+                        size: 48,
+                      ),
+                      label: Text(
+                        model.selectedDomainFolder!.name,
+                        style: TextStyle(
+                            color: ThemeColors.mainText, fontSize: 48),
                       ),
                     ),
                   ),
@@ -150,81 +153,72 @@ class FileSelector extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    Flex(
-                      direction: Axis.horizontal,
-                      children: [
-                        ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) =>
-                                      model.themeSettings!.buttonColor)),
-                          onPressed: (() => model.sortByName()),
-                          icon: Icon(
-                            Icons.text_format,
-                            color: model.themeSettings!.mainTextColor,
-                          ),
-                          label: Text(
-                            "Sort by name",
-                            style: TextStyle(
-                              color: model.themeSettings!.mainTextColor,
-                            ),
-                          ),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith(
+                              (states) => model.themeSettings!.buttonColor)),
+                      onPressed: (() => model.sortByName()),
+                      icon: Icon(
+                        Icons.text_format,
+                        color: model.themeSettings!.mainTextColor,
+                      ),
+                      label: Text(
+                        "Sort by name",
+                        style: TextStyle(
+                          color: model.themeSettings!.mainTextColor,
                         ),
-                        const SizedBox(width: 10),
-                        ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) =>
-                                      model.themeSettings!.buttonColor)),
-                          onPressed: (() => model.sortByDate()),
-                          icon: Icon(
-                            Icons.date_range,
-                            color: model.themeSettings!.mainTextColor,
-                          ),
-                          label: Text(
-                            "Sort by date",
-                            style: TextStyle(
-                              color: model.themeSettings!.mainTextColor,
-                            ),
-                          ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith(
+                              (states) => model.themeSettings!.buttonColor)),
+                      onPressed: (() => model.sortByDate()),
+                      icon: Icon(
+                        Icons.date_range,
+                        color: model.themeSettings!.mainTextColor,
+                      ),
+                      label: Text(
+                        "Sort by date",
+                        style: TextStyle(
+                          color: model.themeSettings!.mainTextColor,
                         ),
-                        const SizedBox(width: 10),
-                        ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) =>
-                                      model.themeSettings!.buttonColor)),
-                          onPressed: (() => model.sortBySize()),
-                          icon: Icon(
-                            Icons.summarize,
-                            color: model.themeSettings!.mainTextColor,
-                          ),
-                          label: Text(
-                            "Sort by size",
-                            style: TextStyle(
-                              color: model.themeSettings!.mainTextColor,
-                            ),
-                          ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith(
+                              (states) => model.themeSettings!.buttonColor)),
+                      onPressed: (() => model.sortBySize()),
+                      icon: Icon(
+                        Icons.summarize,
+                        color: model.themeSettings!.mainTextColor,
+                      ),
+                      label: Text(
+                        "Sort by size",
+                        style: TextStyle(
+                          color: model.themeSettings!.mainTextColor,
                         ),
-                        const SizedBox(width: 10),
-                        ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith((states) =>
-                                      model.themeSettings!.buttonColor)),
-                          onPressed: (() => model.sortByType()),
-                          icon: Icon(
-                            Icons.type_specimen,
-                            color: model.themeSettings!.mainTextColor,
-                          ),
-                          label: Text(
-                            "Sort by type",
-                            style: TextStyle(
-                              color: model.themeSettings!.mainTextColor,
-                            ),
-                          ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith(
+                              (states) => model.themeSettings!.buttonColor)),
+                      onPressed: (() => model.sortByType()),
+                      icon: Icon(
+                        Icons.type_specimen,
+                        color: model.themeSettings!.mainTextColor,
+                      ),
+                      label: Text(
+                        "Sort by type",
+                        style: TextStyle(
+                          color: model.themeSettings!.mainTextColor,
                         ),
-                      ],
+                      ),
                     )
                   ],
                 ),
@@ -235,72 +229,82 @@ class FileSelector extends StatelessWidget {
                   flex: 2,
                   child: GridView.count(
                     primary: false,
-                    shrinkWrap: false,
+                    shrinkWrap: true,
                     childAspectRatio: 3,
                     padding: const EdgeInsets.all(20),
                     crossAxisSpacing: 2,
                     mainAxisSpacing: 0,
-                    crossAxisCount: 4,
+                    crossAxisCount: model.axieItemCount,
                     children: model.folderContent
                         .map(
                           (e) => Visibility(
                             visible: e.isVisible,
-                            child: InkWell(
-                              onDoubleTap: () => model.folderSelected(e),
-                              onTap: () => model.gridElementSelected(e),
-                              child: Container(
-                                margin: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    border: ThemeColors.setBorder(
-                                        0,
-                                        e.isSelected
-                                            ? model.themeSettings!
-                                                .selectedItemColor!
-                                            : Colors.transparent),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(8)),
-                                    color: e.isSelected
-                                        ? model.themeSettings!.selectedItemColor
-                                        : Colors.transparent),
-                                child: Row(children: [
-                                  Icon(
-                                    e.icon,
-                                    size: 60,
-                                    color: model.themeSettings!.mainTextColor,
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          e.name,
-                                          style: TextStyle(
-                                              color: model.themeSettings!
-                                                  .mainTextColor),
-                                        ),
-                                        Text(
-                                          e.modifiedDate != null
-                                              ? e.modifiedDate!
-                                                  .toIso8601String()
-                                              : "",
-                                          style: TextStyle(
-                                              color: model.themeSettings!
-                                                  .mainTextColor),
-                                        ),
-                                        Text(
-                                          e.size,
-                                          style: TextStyle(
-                                              color: model.themeSettings!
-                                                  .mainTextColor),
-                                          textAlign: TextAlign.left,
-                                        )
-                                      ],
+                            child: LayoutBuilder(
+                              builder: (p0, p1) => InkWell(
+                                onDoubleTap: () => model.folderSelected(e),
+                                onTap: () => model.gridElementSelected(e),
+                                child: Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  margin: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      border: ThemeColors.setBorder(
+                                          0,
+                                          e.isSelected
+                                              ? model.themeSettings!
+                                                  .selectedItemColor!
+                                              : Colors.transparent),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      color: e.isSelected
+                                          ? model
+                                              .themeSettings!.selectedItemColor
+                                          : Colors.transparent),
+                                  child: Row(children: [
+                                    Icon(
+                                      e.icon,
+                                      size: 60,
+                                      color: model.themeSettings!.mainTextColor,
                                     ),
-                                  )
-                                ]),
+                                    Container(
+                                      width: (p1.maxWidth - 90),
+                                      decoration: BoxDecoration(),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            e.name,
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                color: model.themeSettings!
+                                                    .mainTextColor),
+                                          ),
+                                          Text(
+                                            e.modifiedDate != null
+                                                ? e.modifiedDate!
+                                                    .toIso8601String()
+                                                : "",
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                color: model.themeSettings!
+                                                    .mainTextColor),
+                                          ),
+                                          Text(
+                                            e.size,
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                color: model.themeSettings!
+                                                    .mainTextColor),
+                                            textAlign: TextAlign.left,
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ]),
+                                ),
                               ),
                             ),
                           ),
@@ -322,30 +326,32 @@ class FileSelector extends StatelessWidget {
                         .map(
                           (e) => Visibility(
                             visible: e.isVisible,
-                            child: InkWell(
-                              onTap: () => model.commonPathSelected(e),
-                              child: Container(
-                                margin: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                    border: ThemeColors.setBorder(
-                                        0,
-                                        e.isSelected
-                                            ? model.themeSettings!
-                                                .selectedItemColor!
-                                            : Colors.transparent),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(8)),
-                                    color: e.isSelected
-                                        ? model.themeSettings!.selectedItemColor
-                                        : Colors.transparent),
-                                child: Row(children: [
-                                  Icon(
-                                    e.icon,
-                                    size: 60,
-                                    color: model.themeSettings!.mainTextColor,
-                                  ),
-                                  Expanded(
-                                    child: Column(
+                            child: SizedBox(
+                              width: 300,
+                              child: InkWell(
+                                onTap: () => model.commonPathSelected(e),
+                                child: Container(
+                                  margin: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      border: ThemeColors.setBorder(
+                                          0,
+                                          e.isSelected
+                                              ? model.themeSettings!
+                                                  .selectedItemColor!
+                                              : Colors.transparent),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      color: e.isSelected
+                                          ? model
+                                              .themeSettings!.selectedItemColor
+                                          : Colors.transparent),
+                                  child: Row(children: [
+                                    Icon(
+                                      e.icon,
+                                      size: 60,
+                                      color: model.themeSettings!.mainTextColor,
+                                    ),
+                                    Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       mainAxisAlignment:
@@ -354,6 +360,7 @@ class FileSelector extends StatelessWidget {
                                         Text(
                                           e.name,
                                           style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
                                               color: model.themeSettings!
                                                   .mainTextColor),
                                         ),
@@ -363,20 +370,22 @@ class FileSelector extends StatelessWidget {
                                                   .toIso8601String()
                                               : "",
                                           style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
                                               color: model.themeSettings!
                                                   .mainTextColor),
                                         ),
                                         Text(
                                           e.size,
                                           style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
                                               color: model.themeSettings!
                                                   .mainTextColor),
                                           textAlign: TextAlign.left,
                                         )
                                       ],
-                                    ),
-                                  )
-                                ]),
+                                    )
+                                  ]),
+                                ),
                               ),
                             ),
                           ),
