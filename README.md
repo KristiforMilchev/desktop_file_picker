@@ -14,7 +14,7 @@ By name
 
 # Supported Modes
 Single file
-Multople Files
+Multiple Files
 Single Folder
 
 ## Installation 
