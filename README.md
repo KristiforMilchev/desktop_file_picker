@@ -13,9 +13,9 @@ By date
 By name
 
 # Supported Modes
-Single file
-Multiple Files
-Single Folder
+- Single file
+- Multiple Files
+- Single Folder
 
 ## Installation 
 
