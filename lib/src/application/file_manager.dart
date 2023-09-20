@@ -89,7 +89,7 @@ class FileManager implements IFileManager {
     String? user;
     if (Platform.isMacOS) {
       user = envVars['USERNAME'];
-      path = "/media/$user";
+      path = "/";
     } else if (Platform.isLinux) {
       user = envVars['USERNAME'];
       path = "/media/$user";
