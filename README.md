@@ -22,7 +22,7 @@ By name
 1. Add the latest version of package to your pubspec.yaml (and run`flutter pub get`):
 ```yaml
 dependencies:
-  desktop_file_picker: ^0.0.2
+  desktop_file_picker: ^0.0.5
 ```
 2. Import the package and use it in your Flutter App.
 ```dart
