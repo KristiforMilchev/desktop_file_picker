@@ -1,4 +1,3 @@
-import 'package:desktop_file_picker/desktop_file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -11,22 +10,54 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const smallRadius = 2.0;
+    const mediumRadius = 4.0;
+    const largeRadius = 6.0;
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 49, 55, 72),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 35, 72, 114),
+          brightness: Brightness.dark,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color.fromARGB(255, 28, 40, 54),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(smallRadius),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(smallRadius),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(smallRadius),
+          ),
+        ),
+        cardTheme: CardThemeData(
+          color: const Color.fromARGB(255, 28, 40, 54),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(mediumRadius),
+          ),
+        ),
+        dialogTheme: DialogThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(largeRadius),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 35, 72, 114),
+            fixedSize: const Size(150, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(smallRadius),
+            ),
+          ),
+        ),
       ),
       home: const MyHomePage(title: 'Desktop file picker demo application'),
     );
@@ -35,15 +66,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -54,17 +76,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MainViewModel(),
       onViewModelReady: (viewModel) => viewModel.ready(context),
       builder: (context, viewModel, child) => Scaffold(
-        backgroundColor: Color.fromARGB(255, 49, 55, 72),
+        backgroundColor: const Color.fromARGB(255, 49, 55, 72),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -86,37 +102,27 @@ class _MyHomePageState extends State<MyHomePage> {
                             "Supported Features",
                             style: TextStyle(fontSize: 22, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Selecting a single file",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Selecting an entire folder",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Selecting multiple files",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Filtering by Extension type",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                         ],
                       ),
                       Column(
@@ -125,23 +131,17 @@ class _MyHomePageState extends State<MyHomePage> {
                             "Next version updates",
                             style: TextStyle(fontSize: 22, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Save file dialog",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Drop file box",
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Text(
                             "Better Logging",
                             style: TextStyle(fontSize: 18, color: Colors.white),
@@ -154,9 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             "Changelog",
                             style: TextStyle(fontSize: 22, color: Colors.white),
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                          const SizedBox(height: 10),
                           SizedBox(
                             height: 500,
                             width: 600,
@@ -184,8 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             color: Colors.white,
                                           ),
                                         ),
-                                      )
-                                      .toList(),
+                                      ),
                                 ],
                               ),
                             ),
@@ -208,24 +205,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         ElevatedButton(
                           onPressed: () => viewModel.selectSingleFile(),
-                          style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                                Color.fromARGB(255, 35, 72, 114)),
-                            fixedSize: MaterialStatePropertyAll(
-                              Size(150, 50),
-                            ),
-                          ),
                           child: const Text("Pick a single file"),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6),
-                            color: Color.fromARGB(255, 28, 40, 54),
+                            color: const Color.fromARGB(255, 28, 40, 54),
                           ),
-                          padding: EdgeInsets.all(25),
+                          padding: const EdgeInsets.all(25),
                           child: Text(
                             "Selected File: ${viewModel.singleFileSelected ?? ""}",
                             style: const TextStyle(
@@ -237,31 +225,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       children: [
                         ElevatedButton(
                           onPressed: () => viewModel.selectFolder(),
-                          style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                                Color.fromARGB(255, 35, 72, 114)),
-                            fixedSize: MaterialStatePropertyAll(
-                              Size(150, 50),
-                            ),
-                          ),
                           child: const Text("Pick a folder"),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(6),
-                              color: Color.fromARGB(255, 28, 40, 54),
+                              color: const Color.fromARGB(255, 28, 40, 54),
                             ),
                             height: 100,
                             child: ListView.builder(
@@ -269,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? viewModel.folderSelected!.length
                                   : 0,
                               itemBuilder: (context, index) => Container(
-                                padding: EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(5),
                                 child: Text(
                                   "Selected Folder: ${viewModel.folderSelected?.elementAt(index)}",
                                   textAlign: TextAlign.center,
@@ -285,26 +262,15 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       children: [
                         ElevatedButton(
                           onPressed: () => viewModel.selectFiles(),
-                          style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                                Color.fromARGB(255, 35, 72, 114)),
-                            fixedSize: MaterialStatePropertyAll(
-                              Size(150, 50),
-                            ),
-                          ),
                           child: const Text("Multiple Files"),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        const SizedBox(height: 20),
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
@@ -316,11 +282,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ? viewModel.filesSelected!.length
                                   : 0,
                               itemBuilder: (context, index) => Container(
-                                padding: EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(5),
                                 child: Text(
                                   "${viewModel.filesSelected?.elementAt(index)}",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                   ),

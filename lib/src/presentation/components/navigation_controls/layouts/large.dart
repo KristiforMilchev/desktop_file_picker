@@ -20,8 +20,8 @@ class LargeNavigation extends StatelessWidget {
             flex: 2,
             child: ElevatedButton.icon(
               style: ButtonStyle(
-                fixedSize: const MaterialStatePropertyAll(Size(150, 50)),
-                backgroundColor: MaterialStateProperty.resolveWith(
+                fixedSize: const WidgetStatePropertyAll(Size(150, 50)),
+                backgroundColor: WidgetStateProperty.resolveWith(
                     (states) => model.themeSettings!.buttonColor),
               ),
               onPressed: (() => model.returnFolder()),

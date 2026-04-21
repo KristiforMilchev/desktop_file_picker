@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../desktop_file_picker_viewmodel.dart';
 import '../../../domain/styles.dart';
 
-// ignore: must_be_immutable
 class Breadcrum extends StatelessWidget {
-  DesktopFilePickerViewModel model;
+  final DesktopFilePickerViewModel model;
 
-  Breadcrum({super.key, required this.model});
+  const Breadcrum({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
+    final theme = model.themeSettings;
+
     return LayoutBuilder(
       builder: (p0, p1) => Container(
         clipBehavior: Clip.antiAlias,
@@ -25,13 +26,20 @@ class Breadcrum extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               child: ElevatedButton.icon(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith(
-                      (states) => model.themeSettings!.buttonColor),
+                  backgroundColor: WidgetStateProperty.resolveWith(
+                      (states) => theme?.buttonColor),
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        theme?.mediumRadius ?? 6,
+                      ),
+                    ),
+                  ),
                 ),
                 onPressed: (() => model.changeMountPoint()),
                 icon: Icon(
                   Icons.folder_open,
-                  color: model.themeSettings!.mainTextColor,
+                  color: theme?.mainTextColor ?? ThemeColors.mainText,
                   size: 48,
                 ),
                 label: Container(
@@ -39,9 +47,9 @@ class Breadcrum extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(),
                   child: Text(
-                    model.selectedDomainFolder!.name,
+                    model.selectedDomainFolder?.name ?? '',
                     style: TextStyle(
-                        color: ThemeColors.mainText,
+                        color: theme?.mainTextColor ?? ThemeColors.mainText,
                         overflow: TextOverflow.ellipsis,
                         fontSize: 48),
                   ),

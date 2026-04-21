@@ -12,21 +12,16 @@ import 'domain/models/theme_data.dart';
 import 'domain/styles.dart';
 import 'infrastructure/ifile_manager.dart';
 
-//TODO Important, decopule the main ViewModel and separate all the concenrns into the newly created components
-//TODO Things like the grid loading and binding, drive binding, folder navigation has to happen inside the content grid view models
-//TODO Saving and picking should only happen inside the PickerConfirmationViewModel etc.
-
-// ignore: must_be_immutable
 class FileSelector extends StatelessWidget {
-  late bool? isSingleFile = true;
-  late bool? isSingleFolder = false;
-  late bool? isMultipleFiles = false;
-  late PickerThemeData? themeSettings;
-  late Function callbackConfirm;
-  late Function callbackCancel;
+  final bool? isSingleFile;
+  final bool? isSingleFolder;
+  final bool? isMultipleFiles;
+  final PickerThemeData? themeSettings;
+  final Function callbackConfirm;
+  final Function callbackCancel;
+  final List<String>? extensions;
 
-  List<String>? extensions = [];
-  FileSelector({
+  const FileSelector({
     super.key,
     this.isSingleFile,
     this.isMultipleFiles,
@@ -39,13 +34,13 @@ class FileSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetIt getIt = GetIt.I;
+    final getIt = GetIt.I;
     if (!getIt.isRegistered<IFileManager>()) {
       getIt.registerSingleton<IFileManager>(FileManager());
     }
 
-    return ViewModelBuilder.reactive(
-      viewModelBuilder: (() => DesktopFilePickerViewModel()),
+    return ViewModelBuilder<DesktopFilePickerViewModel>.reactive(
+      viewModelBuilder: () => DesktopFilePickerViewModel(),
       onViewModelReady: (viewModel) => viewModel.initialize(
         isSingleFile,
         isSingleFolder,
@@ -56,30 +51,38 @@ class FileSelector extends StatelessWidget {
         callbackConfirm,
         context,
       ),
-      builder: (context, model, child) => Material(
-        color: model.themeSettings!.mainBackground,
-        child: NotificationListener(
-          onNotification: (notification) {
-            model.gridResized();
-            return true;
-          },
+      builder: (context, model, child) {
+        final background = model.themeSettings?.mainBackground ?? Colors.white;
+        final textColor = model.themeSettings?.mainTextColor ?? Colors.black;
+
+        if (!model.isInitialized) {
+          return Material(
+            color: background,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        return Material(
+          color: background,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
             children: [
               Breadcrum(model: model),
-              NavigationControls(
-                model: model,
+              NavigationControls(model: model),
+              Expanded(
+                child: model.isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ContentGrid(model: model),
               ),
-              ContentGrid(model: model),
-              Divider(
-                color: ThemeColors.mainText,
-              ),
-              PickerConfirmationbox(model: model)
+              Divider(color: textColor),
+              PickerConfirmationbox(model: model),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

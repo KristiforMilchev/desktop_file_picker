@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../../desktop_file_picker_viewmodel.dart';
 
-// ignore: must_be_immutable
 class PickerConfirmationbox extends StatelessWidget {
-  late DesktopFilePickerViewModel model;
+  final DesktopFilePickerViewModel model;
 
-  PickerConfirmationbox({super.key, required this.model});
+  const PickerConfirmationbox({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
+    final theme = model.themeSettings;
+
     return Container(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -19,10 +20,22 @@ class PickerConfirmationbox extends StatelessWidget {
               style: ButtonStyle(
                 fixedSize: const MaterialStatePropertyAll(Size(150, 50)),
                 backgroundColor: MaterialStateProperty.resolveWith(
-                    (states) => model.themeSettings!.buttonColor),
+                    (states) => theme?.buttonColor),
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      theme?.smallRadius ?? 4,
+                    ),
+                  ),
+                ),
               ),
               onPressed: (() => model.dialogCancel()),
-              child: const Text("Cancel")),
+              child: Text(
+                "Cancel",
+                style: TextStyle(
+                  color: theme?.mainTextColor,
+                ),
+              )),
           const SizedBox(
             width: 10,
           ),
@@ -30,10 +43,22 @@ class PickerConfirmationbox extends StatelessWidget {
               style: ButtonStyle(
                 fixedSize: const MaterialStatePropertyAll(Size(150, 50)),
                 backgroundColor: MaterialStateProperty.resolveWith(
-                    (states) => model.themeSettings!.buttonColor),
+                    (states) => theme?.buttonColor),
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      theme?.smallRadius ?? 4,
+                    ),
+                  ),
+                ),
               ),
               onPressed: (() => model.confirmPressed()),
-              child: const Text("ok"))
+              child: Text(
+                "ok",
+                style: TextStyle(
+                  color: theme?.mainTextColor,
+                ),
+              ))
         ],
       ),
     );

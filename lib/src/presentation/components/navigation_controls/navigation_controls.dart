@@ -7,11 +7,10 @@ import 'layouts/medium.dart';
 import 'layouts/small.dart';
 import 'navigation_controls_viewmodel.dart';
 
-// ignore: must_be_immutable
 class NavigationControls extends StatelessWidget {
-  DesktopFilePickerViewModel model;
+  final DesktopFilePickerViewModel model;
 
-  NavigationControls({super.key, required this.model});
+  const NavigationControls({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
